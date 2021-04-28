@@ -6,18 +6,18 @@
 
  <h3>Ressources</h3>
 <h5>Dependencies and Libraries Used</h5>
-- Spring Shell -> For shell development.
-- Rest Template -> For API enquiries.
-- Json-simple -> For settings files manipulation.
+- Spring Shell -> For shell development. <br>
+- Rest Template -> For API enquiries. <br>
+- Json-simple -> For settings files manipulation. <br>
 
 <h5> APIs </h5>
 - Current Weather <br>
 - Air Pollution
 
 <h3>Disclaimer</h3>
-- This TUI use OpenWeatherMap's APIs, but it is not related in any way to it.
-- This TUI is for personal use only.
-- Informations fetched by the TUI are for indications purpose only.
+- This TUI use OpenWeatherMap's APIs, but it is not related in any way to it. <br>
+- This TUI is for personal use only. <br>
+- Information fetched by the TUI are for indications purpose only. <br>
 
 <h2>Prerequisites</h2>
 
