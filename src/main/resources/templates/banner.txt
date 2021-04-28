@@ -1,0 +1,17 @@
+ ______            _
+|_   _ \          (_)
+  | |_) | _ .--.  __   .--.  .---.
+  |  __'.[ `/'`\][  | ( (`\]/ /__\\
+ _| |__) || |     | |  `'.'.| \__.,
+|_______/[___]   [___][\__) )'.__.'
+                                 V.1
+Brise-tui repository : https://github.com/jxmau/Brise-tui
+
+     - DISCLAIMER -
+This TUI use OpenWeatherMap's APIs, but it is not related in any way to it.
+This TUI is for personal use only.
+Informations fetched by the TUI are for indications purpose only.
+
+Made with ❤ and eun ch'tio peu d'crème fraiche!
+
+
