@@ -38,7 +38,7 @@ public class CliHelpService {
         NO2 -> RED : above annual mean exposure (40 μg/m3)
         O3 -> RED : above annual mean exposure (100 μg/m3)
         SO2 -> RED : above 24 hours mean exposure (20 μg/m3)
-        NH3 -> Ammonia
+        NH3 -> N/A
         Particulates :
         PM 2.5 -> RED : above 24 hours mean exposure (10 μg/m3) - ORANGE : above annual mean exposure (25 μg/m3)
         PM 10 -> RED : above 24 hours mean exposure (20 μg/m3) - ORANGE : above annual mean exposure (50 μg/m3)s""";
