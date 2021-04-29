@@ -1,7 +1,6 @@
 package tech.weather.Brise_tui.application;
 
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import tech.weather.Brise_tui.tools.MetricConverter;
 import tech.weather.Brise_tui.tools.WindDirection;
 
@@ -9,12 +8,16 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class WeatherApplication {
+public class NowApplication {
 
     private final MetricConverter metricConverter;
     private final WindDirection windDirection;
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
 
-    public WeatherApplication(MetricConverter metricConverter, WindDirection windDirection) {
+    public NowApplication(MetricConverter metricConverter, WindDirection windDirection) {
         this.metricConverter = metricConverter;
         this.windDirection = windDirection;
     }
@@ -38,12 +41,13 @@ public class WeatherApplication {
     // generate air informations
     private String airInformations(Map<String, Object> airInfos){
         Double tempKelvin = (Double) airInfos.get("temp");
+        Double feelsLike = (Double) airInfos.get("feels_like");
         Integer humidity = (Integer) airInfos.get("humidity");
         Integer pressure = (Integer) airInfos.get("pressure");
         return "Air conditions : \n" +
-                "Temperature : " + metricConverter.convertKelvinToCelcius(tempKelvin) + "°C  | " +
-                "Humidity : " + humidity + "%\n" +
-                "atmospheric pressure : " + pressure + " hPa\n";
+                "Temperature : " + getTemp(tempKelvin) + "°C, but feels like " +
+                getTemp(feelsLike) + "°C\n" +
+                "Atmospheric pressure : " + pressure + " hPa | Humidity : " + humidity + "%\n";
     }
 
     // Generate wind informations
@@ -54,6 +58,20 @@ public class WeatherApplication {
                 "Speed : " + metricConverter.convertWindMeterPerSecond(speed) + " kph  | " +
                 "Degree : " + degree + " " + windDirection.getWindOriginAbv(degree) + "\n";
 
+    }
+
+    // Get temp
+    private String getTemp(Double temp){
+        temp = metricConverter.convertKelvinToCelcius(temp);
+        if (temp <= 0) {
+            return ANSI_BLUE + temp + ANSI_RESET;
+        } else if (temp >= 30.0) {
+            return ANSI_RED + temp + ANSI_RESET;
+        } else if (temp >= 20.0) {
+            return ANSI_YELLOW + temp + ANSI_RESET;
+        } else {
+            return temp.toString();
+        }
     }
 
 }

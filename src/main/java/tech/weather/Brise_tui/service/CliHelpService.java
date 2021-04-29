@@ -8,11 +8,12 @@ public class CliHelpService {
     public String help(){
         return """
                 hello <cityname>                                       -> Fetch quick weather informations from a major city.
-                weather <cityname> <country ISO code> <state ISO code> -> Fetch complete weather informations. add -s to save
+                now <cityname> <country ISO code> <state ISO code>     -> Fetch complete weather informations. add -s to save
                 air <city name> <country ISO code> <state ISO code>    -> Fetch air quality informations. add -s to save.
                     -names      -> Give you all pollutants' names.
-                    -colours    -> Give the toxicity limits.
-                help                                                   -> Gives you the informations about the tui's commands. (Pssst, you're here.)
+                    -limits     -> Give the toxicity limits.
+                help                                                   -> Gives you the informations about the tui's commands.
+                <Pro Tip> If your city is made of multiple words like New York, replace the space by "+" : New+York !
                 """;
 
     }
@@ -29,7 +30,7 @@ public class CliHelpService {
 
     }
 
-    public String airColours(){
+    public String airLimits(){
         return """
         LIMITS : (According to WHO)
         Molecules :

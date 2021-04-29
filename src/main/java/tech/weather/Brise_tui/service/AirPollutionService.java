@@ -1,15 +1,12 @@
 package tech.weather.Brise_tui.service;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import tech.weather.Brise_tui.application.AirPollutionApplication;
 import tech.weather.Brise_tui.service.ressource.FetchGPSCoordinates;
 import tech.weather.Brise_tui.settings.Settings;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -25,7 +22,7 @@ public class AirPollutionService {
         this.airPollutionApplication = airPollutionApplication;
         this.restTemplate = restTemplateBuilder.build();
         this.settings = settings;
-        this.appId = settings.GetAppId();
+        this.appId = settings.getAppId();
         this.fetchGPSCoordinates = fetchGPSCoordinates;
     }
 

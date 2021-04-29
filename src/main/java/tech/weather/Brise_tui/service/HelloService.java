@@ -20,7 +20,7 @@ public class HelloService {
         this.helloApplication = helloApplication;
         this.restTemplate = restTemplateBuilder.build();
         this.settings = settings;
-        this.appId = settings.GetAppId();
+        this.appId = settings.getAppId();
     }
 
     // Fetch Hello Informations

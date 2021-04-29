@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.file.NoSuchFileException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -28,12 +29,12 @@ public class Settings {
         settings.put("latitude", "");
         settings.put("longitude", "");
 
-
         //Write JSON file
         try (FileWriter file = new FileWriter("settings.json")) {
 
             file.write(settings.toJSONString());
             file.flush();
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -69,7 +70,7 @@ public class Settings {
     }
 
 
-    public String GetAppId(){
+    public String getAppId(){
         try {
             JSONParser parser = new JSONParser();
             Map<String, String> settings = (Map<String, String>) parser.parse(new FileReader("settings.json"));
@@ -78,13 +79,16 @@ public class Settings {
                 System.out.println("No appId saved. Please, enter an OpenWeatherMap appId Key. ");
                 Scanner scanner = new Scanner(System.in);
                 String newKey = scanner.nextLine();
+                System.out.println("Thank you!\nIf it doesn't work, don't worry, you can always modify by using the 'key' command.\n" +
+                        "Brise is now starting! \n");
                 return modifyAppId(newKey);
             } else {
                 return settings.get("appId");
             }
 
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException | NoSuchFileException e) {
             createSettingsFile();
+            getAppId();
             throw new IllegalStateException("Settings files cannot be found.");
         } catch (IOException | ParseException e) {
             throw new IllegalStateException("There has been an issue");

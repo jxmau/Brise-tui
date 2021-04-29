@@ -4,34 +4,33 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import tech.weather.Brise_tui.application.AirPollutionApplication;
 import tech.weather.Brise_tui.application.HelloApplication;
-import tech.weather.Brise_tui.application.WeatherApplication;
+import tech.weather.Brise_tui.application.NowApplication;
 import org.springframework.web.client.RestTemplate;
 import tech.weather.Brise_tui.service.ressource.FetchGPSCoordinates;
 import tech.weather.Brise_tui.settings.Settings;
 
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class WeatherService {
+public class NowService {
 
     private final HelloApplication helloApplication;
-    private final WeatherApplication weatherApplication;
+    private final NowApplication nowApplication;
     private final AirPollutionApplication airPollutionApplication;
     private final RestTemplate restTemplate;
     private final FetchGPSCoordinates fetchGPSCoordinates;
     private final Settings settings;
     private final String appId;
 
-    public WeatherService(Settings settings, HelloApplication helloApplication, WeatherApplication weatherApplication, AirPollutionApplication airPollutionApplication, RestTemplateBuilder restTemplateBuilder, FetchGPSCoordinates fetchGPSCoordinates) {
+    public NowService(Settings settings, HelloApplication helloApplication, NowApplication nowApplication, AirPollutionApplication airPollutionApplication, RestTemplateBuilder restTemplateBuilder, FetchGPSCoordinates fetchGPSCoordinates) {
         this.helloApplication = helloApplication;
-        this.weatherApplication = weatherApplication;
+        this.nowApplication = nowApplication;
         this.airPollutionApplication = airPollutionApplication;
         this.restTemplate = restTemplateBuilder.build();
         this.fetchGPSCoordinates = fetchGPSCoordinates;
         this.settings = settings;
-        this.appId = settings.GetAppId();
+        this.appId = settings.getAppId();
     }
 
 
@@ -54,7 +53,7 @@ public class WeatherService {
             settings.saveCoord(city, country, state, coordinates.get("latitude"), coordinates.get("longitude"));
         }
 
-        return generateBulletin(city, country, jsonResponse);
+        return generateBulletin(city, state, jsonResponse);
     }
 
 
@@ -76,9 +75,9 @@ public class WeatherService {
     public String generateBulletin(String city, String state, Map<String, Map<String, Object>> jsonResponse ){
         if (city != null) {
             if (!state.equals("N/A")) {
-                return "\nWeather bulletin for " + city + ", " + state + "\n" + weatherApplication.generateInformations(jsonResponse);
+                return "\nWeather bulletin for " + cityParser(city) + ", " + state + "\n" + nowApplication.generateInformations(jsonResponse);
             } else {
-                return "\nWeather bulletin for " + city + "\n" + weatherApplication.generateInformations(jsonResponse);
+                return "\nWeather bulletin for " + cityParser(city) + "\n" + nowApplication.generateInformations(jsonResponse);
             }
         } else {
             return "Sorry, the city couldn't be find!";
@@ -99,6 +98,12 @@ public class WeatherService {
         } else {
             return "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + appId;
         }
+
+    }
+
+    // Will replace "+" with space
+    private String cityParser(String city){
+        return city.replace("+", " ");
 
     }
 
