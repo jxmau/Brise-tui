@@ -1,4 +1,4 @@
-package tech.weather.Brise_tui.application;
+package tech.weather.Brise_tui.apps.air;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ import java.util.Map;
 import java.lang.Math;
 
 @Component
-public class AirPollutionApplication {
+public class AirPollutionAssembler {
 
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_RED = "\u001B[31m";

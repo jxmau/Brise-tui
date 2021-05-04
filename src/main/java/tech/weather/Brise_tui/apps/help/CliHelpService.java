@@ -1,4 +1,4 @@
-package tech.weather.Brise_tui.service;
+package tech.weather.Brise_tui.apps.help;
 
 import org.springframework.stereotype.Service;
 

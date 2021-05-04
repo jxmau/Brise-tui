@@ -3,26 +3,26 @@ package tech.weather.Brise_tui.controller;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import tech.weather.Brise_tui.service.AirPollutionService;
-import tech.weather.Brise_tui.service.CliHelpService;
-import tech.weather.Brise_tui.service.HelloService;
-import tech.weather.Brise_tui.service.NowService;
+import tech.weather.Brise_tui.apps.air.AirPollutionParser;
+import tech.weather.Brise_tui.apps.help.CliHelpService;
+import tech.weather.Brise_tui.apps.hello.HelloParser;
+import tech.weather.Brise_tui.apps.weather.now.WeatherNowParser;
 import tech.weather.Brise_tui.settings.Settings;
 
 @ShellComponent
 public class CliController {
 
-    private final NowService nowService;
+    private final WeatherNowParser weatherNowParser;
     private final CliHelpService cliHelpService;
-    private final HelloService helloService;
-    private final AirPollutionService airPollutionService;
+    private final HelloParser helloParser;
+    private final AirPollutionParser airPollutionParser;
     private final Settings settings;
 
-    public CliController(NowService nowService, CliHelpService cliHelpService, HelloService helloService, AirPollutionService airPollutionService, Settings settings) {
-        this.nowService = nowService;
+    public CliController(WeatherNowParser weatherNowParser, CliHelpService cliHelpService, HelloParser helloParser, AirPollutionParser airPollutionParser, Settings settings) {
+        this.weatherNowParser = weatherNowParser;
         this.cliHelpService = cliHelpService;
-        this.helloService = helloService;
-        this.airPollutionService = airPollutionService;
+        this.helloParser = helloParser;
+        this.airPollutionParser = airPollutionParser;
         this.settings = settings;
     }
 
@@ -31,7 +31,7 @@ public class CliController {
     public String hello(String city,
                         @ShellOption(defaultValue = "N/A") String country,
                         @ShellOption(defaultValue = "N/A") String state){
-        return helloService.fetchHelloInformations(city, country, state);
+        return helloParser.fetchHelloInformations(city, country, state);
     }
 
     // Invoke weather app
@@ -41,9 +41,9 @@ public class CliController {
                         @ShellOption(defaultValue = "N/A") String state,
                         @ShellOption(defaultValue = "N/A") String command){
         if (city.equals("N/A")){
-            return nowService.fetchWeatherInfosForSavedCity();
+            return weatherNowParser.fetchWeatherInfosForSavedCity();
         } else {
-            return nowService.fetchWeatherInformations(city, country, state, command);
+            return weatherNowParser.fetchWeatherInformations(city, country, state, command);
         }
     }
 
@@ -56,8 +56,8 @@ public class CliController {
         return switch (city) {
             case "-names" -> cliHelpService.airNames();
             case "-limits" -> cliHelpService.airLimits();
-            case "N/A" -> airPollutionService.fetchAirPollutionInfosForSavedCity();
-            default -> airPollutionService.fetchAirPollutionInformations(city, country, state, command);
+            case "N/A" -> airPollutionParser.fetchAirPollutionInfosForSavedCity();
+            default -> airPollutionParser.fetchAirPollutionInformations(city, country, state, command);
         };
     }
 

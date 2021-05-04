@@ -1,23 +1,22 @@
-package tech.weather.Brise_tui.service;
+package tech.weather.Brise_tui.apps.hello;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import tech.weather.Brise_tui.application.HelloApplication;
 import tech.weather.Brise_tui.settings.Settings;
 
 import java.util.Map;
 
 @Service
-public class HelloService {
+public class HelloParser {
 
-    private final HelloApplication helloApplication;
+    private final HelloAssembler helloAssembler;
     private final RestTemplate restTemplate;
     private final String appId;
     private final Settings settings;
 
-    public HelloService(HelloApplication helloApplication, RestTemplateBuilder restTemplateBuilder, Settings settings) {
-        this.helloApplication = helloApplication;
+    public HelloParser(HelloAssembler helloAssembler, RestTemplateBuilder restTemplateBuilder, Settings settings) {
+        this.helloAssembler = helloAssembler;
         this.restTemplate = restTemplateBuilder.build();
         this.settings = settings;
         this.appId = settings.getAppId();
@@ -34,9 +33,9 @@ public class HelloService {
 
         if (jsonResponse != null) {
             if (!state.equals("N/A")){
-                return "\nHello from " + city + ", " + state + "\n" + helloApplication.generateInformations(jsonResponse);
+                return "\nHello from " + city + ", " + state + "\n" + helloAssembler.generateInformations(jsonResponse);
             } else {
-                return "\nHello from " + city + "\n" + helloApplication.generateInformations(jsonResponse);
+                return "\nHello from " + city + "\n" + helloAssembler.generateInformations(jsonResponse);
             }
         } else {
             return "Sorry, the city couldn't be find!";

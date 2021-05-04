@@ -1,14 +1,14 @@
-package tech.weather.Brise_tui.application;
+package tech.weather.Brise_tui.apps.weather.now;
 
 import org.springframework.stereotype.Component;
-import tech.weather.Brise_tui.tools.MetricConverter;
-import tech.weather.Brise_tui.tools.WindDirection;
+import tech.weather.Brise_tui.apps.tools.MetricConverter;
+import tech.weather.Brise_tui.apps.tools.WindDirection;
 
 import java.util.List;
 import java.util.Map;
 
 @Component
-public class NowApplication {
+public class WeatherNowAssembler {
 
     private final MetricConverter metricConverter;
     private final WindDirection windDirection;
@@ -17,7 +17,7 @@ public class NowApplication {
     public static final String ANSI_YELLOW = "\u001B[33m";
     public static final String ANSI_BLUE = "\u001B[34m";
 
-    public NowApplication(MetricConverter metricConverter, WindDirection windDirection) {
+    public WeatherNowAssembler(MetricConverter metricConverter, WindDirection windDirection) {
         this.metricConverter = metricConverter;
         this.windDirection = windDirection;
     }

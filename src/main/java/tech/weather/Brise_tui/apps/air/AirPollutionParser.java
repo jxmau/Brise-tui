@@ -1,25 +1,24 @@
-package tech.weather.Brise_tui.service;
+package tech.weather.Brise_tui.apps.air;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import tech.weather.Brise_tui.application.AirPollutionApplication;
-import tech.weather.Brise_tui.service.ressource.FetchGPSCoordinates;
+import tech.weather.Brise_tui.apps.tools.FetchGPSCoordinates;
 import tech.weather.Brise_tui.settings.Settings;
 
 import java.util.Map;
 
 @Component
-public class AirPollutionService {
+public class AirPollutionParser {
 
-    private final AirPollutionApplication airPollutionApplication;
+    private final AirPollutionAssembler airPollutionAssembler;
     private final RestTemplate restTemplate;
     private final Settings settings;
     private final String appId;
     private final FetchGPSCoordinates fetchGPSCoordinates;
 
-    public AirPollutionService(AirPollutionApplication airPollutionApplication, RestTemplateBuilder restTemplateBuilder, Settings settings, FetchGPSCoordinates fetchGPSCoordinates) {
-        this.airPollutionApplication = airPollutionApplication;
+    public AirPollutionParser(AirPollutionAssembler airPollutionAssembler, RestTemplateBuilder restTemplateBuilder, Settings settings, FetchGPSCoordinates fetchGPSCoordinates) {
+        this.airPollutionAssembler = airPollutionAssembler;
         this.restTemplate = restTemplateBuilder.build();
         this.settings = settings;
         this.appId = settings.getAppId();
@@ -63,7 +62,7 @@ public class AirPollutionService {
                         "http://api.openweathermap.org/data/2.5/air_pollution?lat=" + coordinates.get("latitude")
                                 + "&lon=" + coordinates.get("longitude") + "&appid=" + appId
                         , Map.class);
-        return airPollutionApplication.generateInformations(jsonResponseForAirPollution);
+        return airPollutionAssembler.generateInformations(jsonResponseForAirPollution);
     }
 
 

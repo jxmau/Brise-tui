@@ -1,20 +1,19 @@
-package tech.weather.Brise_tui.application;
+package tech.weather.Brise_tui.apps.hello;
 
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import tech.weather.Brise_tui.tools.MetricConverter;
-import tech.weather.Brise_tui.tools.WindDirection;
+import tech.weather.Brise_tui.apps.tools.MetricConverter;
+import tech.weather.Brise_tui.apps.tools.WindDirection;
 
 import java.util.List;
 import java.util.Map;
 
 @Component
-public class HelloApplication {
+public class HelloAssembler {
 
     private final MetricConverter metricConverter;
     private final WindDirection windDirection;
 
-    public HelloApplication(MetricConverter metricConverter, WindDirection windDirection) {
+    public HelloAssembler(MetricConverter metricConverter, WindDirection windDirection) {
         this.metricConverter = metricConverter;
         this.windDirection = windDirection;
     }
