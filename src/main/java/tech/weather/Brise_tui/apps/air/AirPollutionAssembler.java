@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.lang.Math;
@@ -16,34 +17,36 @@ public class AirPollutionAssembler {
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_YELLOW = "\u001B[33m";
 
+
     public String generateInformations(Map<String, Map<String, Object>> jsonResponse) {
         List<Map<String, Object>> jsonResponseList = (List<Map<String, Object>>) jsonResponse.get("list");
         Map<String, Object> airQualityInfos = jsonResponseList.get(0);
-        Map<String, Object> airPollutants = (Map<String, Object>) airQualityInfos.get("components");
+        Map<String, Object> airPollutantsReceived = (Map<String, Object>) airQualityInfos.get("components");
+        Map<String, Double> airPollutants = new HashMap<>();
+        for (String key : airPollutantsReceived.keySet()) {
+            airPollutants.put(key, Double.valueOf(airPollutantsReceived.get(key).toString()));
+        }
         Map<String, Integer> main = (Map<String, Integer>) airQualityInfos.get("main");
-        return airPollutantsInformations(airPollutants) + "\n > Air Quality : " + airQualityCondition(main.get("aqi")) + "\n"+
-                "(type air -limits to know more about the colour code.)";
-
+        return """
+                %s
+                > Air Quality : %s
+                (type air -limits to know more about the colour code.)
+                """.formatted(airPollutantsInformations(airPollutants), airQualityCondition(main.get("aqi")));
     }
 
     // Generate the pollutants bulletin
     // Variables are received as Double, except when equals as zero, then they are Integer.
-    private String airPollutantsInformations(Map<String, Object> airPollutants) {
-        Double co = Double.valueOf(airPollutants.get("co").toString());
-        Double no = Double.valueOf(airPollutants.get("no").toString());
-        Double no2 = Double.valueOf(airPollutants.get("no2").toString());
-        Double o3 = Double.valueOf(airPollutants.get("o3").toString());
-        Double so2 = Double.valueOf(airPollutants.get("so2").toString());
-        Double nh3 = Double.valueOf(airPollutants.get("nh3").toString());
-        Double pm2_5 = Double.valueOf(airPollutants.get("pm2_5").toString());
-        Double pm10 = Double.valueOf(airPollutants.get("pm10").toString());
-        return "\n > Molecules : \n" +
-                "CO : " + getCO(co) + " μg/m3 | NO : " + no + " μg/m3\n" +
-                "NO2 : " + getNO2(no2) + " μg/m3 | O3 : " + getO3(o3) + " μg/m3\n" +
-                "SO2 : " + getSO2(so2) + " μg/m3 | NH3 : " + nh3 + " μg/m3\n" +
-                " > Particulates : \n" +
-                "PM2.5 : " + getPM2_5(pm2_5) + " μg/m3 | PM10 : " + getPM10(pm10) + " μg/m3\n";
-
+    private String airPollutantsInformations(Map<String, Double> airPollutants) {
+        return """
+                 > Molecules :
+                 CO : %s μg/m3 | NO : %s μg/m3
+                 NO2 : %s μg/m3  | O3 : %s μg/m3 
+                 SO2 : %s μg/m3 | NH3 : %s μg/m3 
+                 > Particulates :
+                 PM2.5 : %s μg/m3 | PM10 : %s μg/m3
+                """.formatted(getCO(airPollutants.get("co")), airPollutants.get("no"),
+                getNO2(airPollutants.get("no2")), getO3(airPollutants.get("o3")), getSO2(airPollutants.get("so2")),
+                airPollutants.get("nh3"), getPM2_5(airPollutants.get("pm2_5")), getPM10(airPollutants.get("pm10")));
 
     }
 
