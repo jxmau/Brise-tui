@@ -28,15 +28,12 @@ public class WeatherNowAssembler {
         List<Map<String, Object>> weatherList = (List<Map<String, Object>>) jsonResponse.get("weather");
         Map<String, Object> weatherInfos = weatherList.get(0);
 
-
-        return weatherInformations(weatherInfos) + airInformations(airInfos) + windInformations(windInfos);
+        return """
+                Current Weather Condition : %s
+                %s%s
+                """.formatted(weatherInfos.get("description"),airInformations(airInfos), windInformations(windInfos));
     }
 
-    // generate conditions informations
-    private String weatherInformations(Map<String, Object> weatherInfos){
-        String condition = (String) weatherInfos.get("description");
-        return "Weather conditions : " + condition + ".\n";
-    }
 
     // generate air informations
     private String airInformations(Map<String, Object> airInfos){
@@ -44,34 +41,52 @@ public class WeatherNowAssembler {
         Double feelsLike = (Double) airInfos.get("feels_like");
         Integer humidity = (Integer) airInfos.get("humidity");
         Integer pressure = (Integer) airInfos.get("pressure");
-        return "Air conditions : \n" +
-                "Temperature : " + getTemp(tempKelvin) + "°C, but feels like " +
-                getTemp(feelsLike) + "°C\n" +
-                "Atmospheric pressure : " + pressure + " hPa | Humidity : " + humidity + "%\n";
+
+        return """
+                Air Conditions :
+                    Temperature : %s, but feels like %s.
+                    Atmospheric Pressure : %s hPa | Humidity : %s
+                """.formatted(getTemp(tempKelvin), getTemp(feelsLike),
+                 pressure, humidity);
+
+
     }
 
     // Generate wind informations
     private String windInformations(Map<String, Object> windInfos){
         Double speed = Double.valueOf(windInfos.get("speed").toString());
         Double degree = Double.valueOf(windInfos.get("deg").toString());
-        return "Wind conditions : \n" +
-                "Speed : " + metricConverter.convertWindMeterPerSecond(speed) + " kph  | " +
-                "Degree : " + degree + " " + windDirection.getWindOriginAbv(degree) + "\n";
+
+        return """
+                Wind Conditions :
+                    Speed : %s | Degree %s
+                """.formatted(getWindSpeed(speed), getWindDirection(degree));
+
 
     }
 
     // Get temp
-    private String getTemp(Double temp){
-        temp = metricConverter.convertKelvinToCelcius(temp);
+    private String getTemp(Double tempKelvin){
+        Double temp = metricConverter.convertKelvinToCelcius(tempKelvin);
         if (temp <= 0) {
-            return ANSI_BLUE + temp + ANSI_RESET;
+            return ANSI_BLUE + temp + ANSI_RESET + "°C";
         } else if (temp >= 30.0) {
-            return ANSI_RED + temp + ANSI_RESET;
+            return ANSI_RED + temp + ANSI_RESET + "°C";
         } else if (temp >= 20.0) {
-            return ANSI_YELLOW + temp + ANSI_RESET;
+            return ANSI_YELLOW + temp + ANSI_RESET + "°C";
         } else {
-            return temp.toString();
+            return temp + "°C";
         }
+    }
+
+    // Get Wind Speed
+    private String getWindSpeed(Double speed){
+        return metricConverter.convertWindMeterPerSecond(speed) + " kph";
+    }
+
+    // Get Wind Direction
+    private String getWindDirection(Double degree){
+        return degree + " " + windDirection.getWindOriginAbv(degree);
     }
 
 }
