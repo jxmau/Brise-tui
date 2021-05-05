@@ -3,10 +3,11 @@ package tech.weather.Brise_tui.controller;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import tech.weather.Brise_tui.apps.air.AirPollutionParser;
+import tech.weather.Brise_tui.apps.air.now.AirPollutionParser;
 import tech.weather.Brise_tui.apps.help.CliHelpService;
 import tech.weather.Brise_tui.apps.hello.HelloParser;
 import tech.weather.Brise_tui.apps.weather.now.WeatherNowParser;
+import tech.weather.Brise_tui.apps.weather.today.WeatherBulletinRequest;
 import tech.weather.Brise_tui.settings.Settings;
 
 @ShellComponent
@@ -17,13 +18,15 @@ public class CliController {
     private final HelloParser helloParser;
     private final AirPollutionParser airPollutionParser;
     private final Settings settings;
+    private final WeatherBulletinRequest weatherBulletinRequest;
 
-    public CliController(WeatherNowParser weatherNowParser, CliHelpService cliHelpService, HelloParser helloParser, AirPollutionParser airPollutionParser, Settings settings) {
+    public CliController(WeatherBulletinRequest weatherBulletinRequest, WeatherNowParser weatherNowParser, CliHelpService cliHelpService, HelloParser helloParser, AirPollutionParser airPollutionParser, Settings settings) {
         this.weatherNowParser = weatherNowParser;
         this.cliHelpService = cliHelpService;
         this.helloParser = helloParser;
         this.airPollutionParser = airPollutionParser;
         this.settings = settings;
+        this.weatherBulletinRequest = weatherBulletinRequest;
     }
 
     // Invoke Hello app
@@ -36,14 +39,31 @@ public class CliController {
 
     // Invoke weather app
     @ShellMethod("Feath current weather informations from a city\n-s to save city informations.")
-    public String now(@ShellOption(defaultValue = "N/A") String city,
+    public String weather(String selection,
+                        @ShellOption(defaultValue = "N/A") String city,
                         @ShellOption(defaultValue = "N/A") String country,
                         @ShellOption(defaultValue = "N/A") String state,
                         @ShellOption(defaultValue = "N/A") String command){
-        if (city.equals("N/A")){
-            return weatherNowParser.fetchWeatherInfosForSavedCity();
-        } else {
-            return weatherNowParser.fetchWeatherInformations(city, country, state, command);
+        switch (selection){
+            case "now" :
+                if (city.equals("N/A")){
+                     return weatherNowParser.fetchWeatherInfosForSavedCity();
+                } else {
+                     return weatherNowParser.fetchWeatherInformations(city, country, state, command);
+                }
+            case "today":
+                if (city.equals("N/A")){
+                    return weatherBulletinRequest.weatherTodayForSavedCity();
+                } else {
+                    return weatherBulletinRequest.weatherTodayForCity(city, country, state);
+                }
+            case "tomorrow":
+                if (city.equals("N/A")){
+                    return weatherBulletinRequest.weatherTomorrowForSavedCity();
+                } else {
+                    return weatherBulletinRequest.weatherTomorrowForCity(city, country, state);
+                }
+            default: return "There's been an issue";
         }
     }
 
@@ -75,6 +95,8 @@ public class CliController {
     public void exit(){
         System.exit(0);
     }
+
+
 
 
 }

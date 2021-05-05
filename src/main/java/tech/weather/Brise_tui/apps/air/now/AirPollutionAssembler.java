@@ -1,4 +1,4 @@
-package tech.weather.Brise_tui.apps.air;
+package tech.weather.Brise_tui.apps.air.now;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
