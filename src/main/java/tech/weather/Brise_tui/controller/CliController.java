@@ -55,13 +55,13 @@ public class CliController {
                 if (city.equals("N/A")){
                     return weatherBulletinRequest.weatherTodayForSavedCity();
                 } else {
-                    return weatherBulletinRequest.weatherTodayForCity(city, country, state);
+                    return weatherBulletinRequest.weatherTodayForCity(city, country, state, command);
                 }
             case "tomorrow":
                 if (city.equals("N/A")){
                     return weatherBulletinRequest.weatherTomorrowForSavedCity();
                 } else {
-                    return weatherBulletinRequest.weatherTomorrowForCity(city, country, state);
+                    return weatherBulletinRequest.weatherTomorrowForCity(city, country, state, command);
                 }
             default: return "There's been an issue";
         }
