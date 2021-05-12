@@ -3,27 +3,30 @@ package tech.weather.Brise_tui.controller;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import tech.weather.Brise_tui.service.AirPollutionService;
-import tech.weather.Brise_tui.service.CliHelpService;
-import tech.weather.Brise_tui.service.HelloService;
-import tech.weather.Brise_tui.service.NowService;
+import tech.weather.Brise_tui.apps.air.now.AirPollutionParser;
+import tech.weather.Brise_tui.apps.help.CliHelpService;
+import tech.weather.Brise_tui.apps.hello.HelloParser;
+import tech.weather.Brise_tui.apps.weather.now.WeatherNowParser;
+import tech.weather.Brise_tui.apps.weather.today.WeatherBulletinRequest;
 import tech.weather.Brise_tui.settings.Settings;
 
 @ShellComponent
 public class CliController {
 
-    private final NowService nowService;
+    private final WeatherNowParser weatherNowParser;
     private final CliHelpService cliHelpService;
-    private final HelloService helloService;
-    private final AirPollutionService airPollutionService;
+    private final HelloParser helloParser;
+    private final AirPollutionParser airPollutionParser;
     private final Settings settings;
+    private final WeatherBulletinRequest weatherBulletinRequest;
 
-    public CliController(NowService nowService, CliHelpService cliHelpService, HelloService helloService, AirPollutionService airPollutionService, Settings settings) {
-        this.nowService = nowService;
+    public CliController(WeatherBulletinRequest weatherBulletinRequest, WeatherNowParser weatherNowParser, CliHelpService cliHelpService, HelloParser helloParser, AirPollutionParser airPollutionParser, Settings settings) {
+        this.weatherNowParser = weatherNowParser;
         this.cliHelpService = cliHelpService;
-        this.helloService = helloService;
-        this.airPollutionService = airPollutionService;
+        this.helloParser = helloParser;
+        this.airPollutionParser = airPollutionParser;
         this.settings = settings;
+        this.weatherBulletinRequest = weatherBulletinRequest;
     }
 
     // Invoke Hello app
@@ -31,19 +34,36 @@ public class CliController {
     public String hello(String city,
                         @ShellOption(defaultValue = "N/A") String country,
                         @ShellOption(defaultValue = "N/A") String state){
-        return helloService.fetchHelloInformations(city, country, state);
+        return helloParser.fetchHelloInformations(city, country, state);
     }
 
     // Invoke weather app
     @ShellMethod("Feath current weather informations from a city\n-s to save city informations.")
-    public String now(@ShellOption(defaultValue = "N/A") String city,
+    public String weather(String selection,
+                        @ShellOption(defaultValue = "N/A") String city,
                         @ShellOption(defaultValue = "N/A") String country,
                         @ShellOption(defaultValue = "N/A") String state,
                         @ShellOption(defaultValue = "N/A") String command){
-        if (city.equals("N/A")){
-            return nowService.fetchWeatherInfosForSavedCity();
-        } else {
-            return nowService.fetchWeatherInformations(city, country, state, command);
+        switch (selection){
+            case "now" :
+                if (city.equals("N/A")){
+                     return weatherNowParser.fetchWeatherInfosForSavedCity();
+                } else {
+                     return weatherNowParser.fetchWeatherInformations(city, country, state, command);
+                }
+            case "today":
+                if (city.equals("N/A")){
+                    return weatherBulletinRequest.weatherTodayForSavedCity();
+                } else {
+                    return weatherBulletinRequest.weatherTodayForCity(city, country, state, command);
+                }
+            case "tomorrow":
+                if (city.equals("N/A")){
+                    return weatherBulletinRequest.weatherTomorrowForSavedCity();
+                } else {
+                    return weatherBulletinRequest.weatherTomorrowForCity(city, country, state, command);
+                }
+            default: return "There's been an issue";
         }
     }
 
@@ -56,8 +76,8 @@ public class CliController {
         return switch (city) {
             case "-names" -> cliHelpService.airNames();
             case "-limits" -> cliHelpService.airLimits();
-            case "N/A" -> airPollutionService.fetchAirPollutionInfosForSavedCity();
-            default -> airPollutionService.fetchAirPollutionInformations(city, country, state, command);
+            case "N/A" -> airPollutionParser.fetchAirPollutionInfosForSavedCity();
+            default -> airPollutionParser.fetchAirPollutionInformations(city, country, state, command);
         };
     }
 
@@ -75,6 +95,8 @@ public class CliController {
     public void exit(){
         System.exit(0);
     }
+
+
 
 
 }

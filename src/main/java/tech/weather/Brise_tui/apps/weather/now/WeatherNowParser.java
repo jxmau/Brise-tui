@@ -1,34 +1,33 @@
-package tech.weather.Brise_tui.service;
+package tech.weather.Brise_tui.apps.weather.now;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
-import tech.weather.Brise_tui.application.AirPollutionApplication;
-import tech.weather.Brise_tui.application.HelloApplication;
-import tech.weather.Brise_tui.application.NowApplication;
+import tech.weather.Brise_tui.apps.air.now.AirPollutionAssembler;
+import tech.weather.Brise_tui.apps.hello.HelloAssembler;
 import org.springframework.web.client.RestTemplate;
-import tech.weather.Brise_tui.service.ressource.FetchGPSCoordinates;
+import tech.weather.Brise_tui.apps.tools.GPSCoordParser;
 import tech.weather.Brise_tui.settings.Settings;
 
 
 import java.util.Map;
 
 @Service
-public class NowService {
+public class WeatherNowParser {
 
-    private final HelloApplication helloApplication;
-    private final NowApplication nowApplication;
-    private final AirPollutionApplication airPollutionApplication;
+    private final HelloAssembler helloAssembler;
+    private final WeatherNowAssembler weatherNowAssembler;
+    private final AirPollutionAssembler airPollutionAssembler;
     private final RestTemplate restTemplate;
-    private final FetchGPSCoordinates fetchGPSCoordinates;
+    private final GPSCoordParser GPSCoordParser;
     private final Settings settings;
     private final String appId;
 
-    public NowService(Settings settings, HelloApplication helloApplication, NowApplication nowApplication, AirPollutionApplication airPollutionApplication, RestTemplateBuilder restTemplateBuilder, FetchGPSCoordinates fetchGPSCoordinates) {
-        this.helloApplication = helloApplication;
-        this.nowApplication = nowApplication;
-        this.airPollutionApplication = airPollutionApplication;
+    public WeatherNowParser(Settings settings, HelloAssembler helloAssembler, WeatherNowAssembler weatherNowAssembler, AirPollutionAssembler airPollutionAssembler, RestTemplateBuilder restTemplateBuilder, GPSCoordParser GPSCoordParser) {
+        this.helloAssembler = helloAssembler;
+        this.weatherNowAssembler = weatherNowAssembler;
+        this.airPollutionAssembler = airPollutionAssembler;
         this.restTemplate = restTemplateBuilder.build();
-        this.fetchGPSCoordinates = fetchGPSCoordinates;
+        this.GPSCoordParser = GPSCoordParser;
         this.settings = settings;
         this.appId = settings.getAppId();
     }
@@ -49,7 +48,7 @@ public class NowService {
                         Map.class);
 
         if (command.equals("-s")) {
-            Map<String, String> coordinates = fetchGPSCoordinates.fetchCoordinates(jsonResponse);
+            Map<String, String> coordinates = GPSCoordParser.jsonParserToGetCoordInfos(jsonResponse);
             settings.saveCoord(city, country, state, coordinates.get("latitude"), coordinates.get("longitude"));
         }
 
@@ -75,9 +74,9 @@ public class NowService {
     public String generateBulletin(String city, String state, Map<String, Map<String, Object>> jsonResponse ){
         if (city != null) {
             if (!state.equals("N/A")) {
-                return "\nWeather bulletin for " + cityParser(city) + ", " + state + "\n" + nowApplication.generateInformations(jsonResponse);
+                return "\nWeather bulletin for " + cityParser(city) + ", " + state + "\n" + weatherNowAssembler.generateInformations(jsonResponse);
             } else {
-                return "\nWeather bulletin for " + cityParser(city) + "\n" + nowApplication.generateInformations(jsonResponse);
+                return "\nWeather bulletin for " + cityParser(city) + "\n" + weatherNowAssembler.generateInformations(jsonResponse);
             }
         } else {
             return "Sorry, the city couldn't be find!";
