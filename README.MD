@@ -1,7 +1,7 @@
 
 
 <h2>Brise-tui </h2>
-<b> Current Version = V 0.9.1 </b> <br> <br>
+<b> Current Version = V 0.9.2 </b> <br> <br>
 <b>Brise-tui</b> is a simple Terminal User Interface using OpenWeatherMap's Current Weather and Air Pollution APIs.
 
  <h3>Ressources</h3>
