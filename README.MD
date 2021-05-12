@@ -1,4 +1,6 @@
 
+This is the archive of the repository of Brise when it was developped using Spring Web for HTTP request and Spring Shell for TUI. <br>
+To follow the current development, please click here : https://github.com/jxmau/Brise
 
 <h2>Brise-tui </h2>
 <b> Current Version = V 0.9.2 </b> <br> <br>
