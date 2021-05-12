@@ -4,7 +4,7 @@
   |  __'.[ `/'`\][  | ( (`\]/ /__\\
  _| |__) || |     | |  `'.'.| \__.,
 |_______/[___]   [___][\__) )'.__.'
-                                 V.0.9
+                                 V.0.9.2
 Brise-tui repository : https://github.com/jxmau/Brise-tui
 
      - DISCLAIMER -
